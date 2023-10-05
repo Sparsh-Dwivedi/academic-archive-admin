@@ -17,3 +17,16 @@ export const getAllUsers= async ()=>{
         return err;
     }
 }
+
+export const searchPaper= async (req,cite,type)=>{
+    try{
+        const res=await publicRequest.post('/papers/search/'+type+'/'+cite,req)
+        console.log(res)
+        return res;
+    }
+    catch(err){
+        console.log(err)
+        return err;
+    }
+}
+

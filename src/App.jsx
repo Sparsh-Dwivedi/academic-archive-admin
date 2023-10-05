@@ -8,6 +8,8 @@ import {
 } from "react-router-dom";
 import Faculty from './Pages/Faculty';
 import Search from './Pages/Search';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 
 const Container=styled.div`
     background-color: rgb(238, 238, 238);
@@ -33,10 +35,12 @@ const router = createBrowserRouter([
 
 const App = () => {
   return (
-    <Container>
-      <Navbar/>
-      <RouterProvider router={router} />
-    </Container>
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <Container>
+        <Navbar/>
+        <RouterProvider router={router} />
+      </Container>
+    </LocalizationProvider>
   )
 }
 

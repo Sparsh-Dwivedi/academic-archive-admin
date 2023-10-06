@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import styled from 'styled-components'
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
@@ -9,6 +9,7 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import { searchPaper } from '../utils/api';
+import { jsPDF } from 'jspdf';
 
 const Container=styled.div`
   width:100%;
@@ -17,6 +18,17 @@ const Container=styled.div`
   flex-direction: column;
   box-sizing: border-box;
   padding:0 2rem;
+  
+`
+const Title=styled.span`
+    width: max-content;
+    font-size: 1.8rem;
+    font-weight: 500;
+`
+const Input=styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   >button{
     width: max-content;
     font-size: 1.2rem;
@@ -28,16 +40,6 @@ const Container=styled.div`
     border:none;
     border-radius:15px;
   }
-`
-const Title=styled.span`
-    width: max-content;
-    font-size: 1.8rem;
-    font-weight: 500;
-`
-const Input=styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
 `
 const Keyword=styled.input`
   width: 40%;
@@ -125,11 +127,13 @@ const Search = () => {
   const [end,setEnd]=useState(null);
   const [result,setResult]=useState([]);
   const [error,setError]=useState('');
+  const pdfRef = useRef(null);
 
   const search=async()=>{
     setError(null)
     if(!cite) setError('Citation Style is required')
     if(!type) setError('Research Paper type is required')
+    if(!cite || !type)  return;
     var req={
       query:keyword,
       start:start?start:'1990-01-01',
@@ -142,10 +146,26 @@ const Search = () => {
       setResult(res.data)
     }
   }
+  const savePDF=async()=>{
+    // const doc = new jsPDF();
+    // doc.setFontSize(12)
+    // doc.text( result,20, 25,);
+    // doc.save("research paper citation");
+    const content = pdfRef.current;
 
+    const doc = new jsPDF();
+    doc.setFontSize(1);
+    doc.html(content, {
+        callback: function (doc) {
+            doc.save('sample.pdf');
+        },
+        width: 200, // <- here
+        windowWidth: 200 // <- here
+    });
+  }
   useEffect(()=>{
-    if(location.state.user) setUser(location.state.user)
-    setDeparment(location.state.department)
+    if(location.state && location.state.user) setUser(location.state.user)
+    else if(location.state && location.state.user) setDeparment(location.state.department)
   },[])
   return (
     <Container>
@@ -188,9 +208,13 @@ const Search = () => {
           <PaperType type={type} setType={setType} />
           <CiteType type={cite} setType={setCite} />
       </Input>
-      <button onClick={search}>Search</button> <Error>{error}</Error>
+      <Input>
+        <button onClick={search}>Search</button> 
+        <Error>{error}</Error>
+        <button onClick={savePDF}>Save as PDF</button>
+      </Input>
 
-      <Papers>
+      <Papers ref={pdfRef}>
         {result.map(r=>
           <span>{r}</span>  
         )}

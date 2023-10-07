@@ -243,7 +243,7 @@ const Search = () => {
         <button onClick={savePDF}>Save as PDF</button>
       </Input>
 
-      {result.length?
+      {result.length&&type&&cite?
         <Papers id="pdfcontent" ref={pdfRef}>
           <h1>{user?user.name:department} - {type} {cite.toUpperCase()} style </h1>
           {result.map((r,index)=>

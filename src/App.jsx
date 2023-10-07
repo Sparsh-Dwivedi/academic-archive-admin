@@ -14,7 +14,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 const Container=styled.div`
     background-color: rgb(238, 238, 238);
     width:100%;
-    height:100vh;
+    height:100%;
 `
 
 

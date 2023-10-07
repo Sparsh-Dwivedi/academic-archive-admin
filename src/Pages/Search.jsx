@@ -9,11 +9,11 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import { searchPaper } from '../utils/api';
-import { jsPDF } from 'jspdf';
 
 const Container=styled.div`
   width:100%;
-  height:100%;
+  min-height:100vh;
+  max-height:max-content; 
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
@@ -151,18 +151,47 @@ const Search = () => {
     // doc.setFontSize(12)
     // doc.text( result,20, 25,);
     // doc.save("research paper citation");
-    const content = pdfRef.current;
-
-    const doc = new jsPDF();
-    doc.setFontSize(1);
-    doc.html(content, {
-        callback: function (doc) {
-            doc.save('sample.pdf');
-        },
-        width: 200, // <- here
-        windowWidth: 200 // <- here
-    });
+    // const content = pdfRef.current;
+    // console.log(content)
+    // const doc = new jsPDF();
+    // doc.setFontSize("1");
+    // doc.html(content, {
+    //     callback: function (doc) {
+    //         doc.save('sample.pdf');
+    //     },
+    //     width: 200, // <- here
+    //     windowWidth: 200 // <- here
+    // });
+    var doc = new jsPDF("p", "pt", "letter"),
+            source = document.getElementById("pdfcontent"),
+            margins = {
+              top: 40,
+              bottom: 60,
+              left: 40,
+              right:40,
+              width: 450,
+              align: "justify"
+            };
+            console.log(source)
+            console.log(doc)
+        doc.fromHTML(
+          source, // HTML string or DOM elem ref.
+          margins.left, // x coord
+          margins.top,
+          // margins.right,
+          {
+            // y coord
+            width: margins.width // max width of content on PDF
+          },
+          function(dispose) {
+            // dispose: object with X, Y of the last line add to the PDF
+            //          this allow the insertion of new lines after html
+            doc.save(`${type+" "+cite.toUpperCase()}`);
+          },
+          margins
+        );
   }
+
   useEffect(()=>{
     if(location.state && location.state.user) setUser(location.state.user)
     else if(location.state && location.state.user) setDeparment(location.state.department)
@@ -214,11 +243,14 @@ const Search = () => {
         <button onClick={savePDF}>Save as PDF</button>
       </Input>
 
-      <Papers ref={pdfRef}>
-        {result.map(r=>
-          <span>{r}</span>  
-        )}
-      </Papers>
+      {result.length?
+        <Papers id="pdfcontent" ref={pdfRef}>
+          <h1>{user?user.name:department} - {type} {cite.toUpperCase()} style </h1>
+          {result.map((r,index)=>
+            <span>{index+1+") "+r}</span>  
+          )}
+        </Papers>
+      :''}
     </Container>
   )
 }

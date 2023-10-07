@@ -196,6 +196,10 @@ const Search = () => {
     if(location.state && location.state.user) setUser(location.state.user)
     else if(location.state && location.state.user) setDeparment(location.state.department)
   },[])
+useEffect(()=>{
+  // if(start==="Invalid date")
+  console.log(start)
+},[start])
   return (
     <Container>
       <Title>{user?user.name:''}</Title>
@@ -245,7 +249,12 @@ const Search = () => {
 
       {result.length&&type&&cite?
         <Papers id="pdfcontent" ref={pdfRef}>
-          <h1>{user?user.name:department} - {type} {cite.toUpperCase()} style </h1>
+          <h2>{user?user.name:department} - {type} {cite.toUpperCase()} style </h2>
+          <h3>
+            {start&&end?("From "+`${start}`+" to "+`${end}`):''}
+            {start===null&&end?("Before "+`${end}`):''}
+            {end===null&&start?("After "+`${start}`):''}
+          </h3>
           {result.map((r,index)=>
             <span>{index+1+") "+r}</span>  
           )}

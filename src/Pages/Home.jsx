@@ -35,11 +35,11 @@ const Home = () => {
 
   return (
     <Wrapper>
-        <Item>
+        <Item onClick={()=>navigate('/department')}>
             <img src={department}/>
             Department
         </Item>
-        <Item onClick={()=>navigate('faculty')}>
+        <Item onClick={()=>navigate('/faculty')}>
             <img src={faculty}/>
             Faculty
         </Item>

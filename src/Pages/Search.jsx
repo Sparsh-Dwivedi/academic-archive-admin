@@ -193,16 +193,17 @@ const Search = () => {
   }
 
   useEffect(()=>{
-    if(location.state && location.state.user) setUser(location.state.user)
-    else if(location.state && location.state.user) setDeparment(location.state.department)
+    if(location.state && location.state.user){
+      setUser(location.state.user)
+    }
+    else if(location.state && location.state.department){
+      setDeparment(location.state.department)
+    }
   },[])
-useEffect(()=>{
-  // if(start==="Invalid date")
-  console.log(start)
-},[start])
+
   return (
     <Container>
-      <Title>{user?user.name:''}</Title>
+      <Title>{user?user.name:department}</Title>
       <Input>
         <Keyword placeholder='Search Keyword or Title' 
           value={keyword} onChange={(e)=>setKeyboard(e.target.value)}/>

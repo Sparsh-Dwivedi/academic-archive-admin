@@ -7,6 +7,7 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import Faculty from './Pages/Faculty';
+import Department from './Pages/Department';
 import Search from './Pages/Search';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -26,6 +27,10 @@ const router = createBrowserRouter([
   {
     path: "/faculty",
     element: <Faculty/>,
+  },
+  {
+    path: "/department",
+    element: <Department/>,
   },
   {
     path: "/search",

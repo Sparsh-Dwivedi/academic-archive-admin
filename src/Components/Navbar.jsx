@@ -21,10 +21,10 @@ const Left=styled.div`
   width:50%;
   color: #d54d7b;
   font-size: 2rem; 
-  font-weight: normal;  
+  font-weight: normal;
+  cursor: pointer;
 `
 const Navbar = () => {
-    
   return (
     <Container>
     <Left>Academic Archive</Left>

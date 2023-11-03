@@ -9,10 +9,12 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import { searchPaper } from '../utils/api';
+import FieldSelector from '../Components/FieldSelector';
+import Table from '../Components/Table';
 
 const Container=styled.div`
   width:100%;
-  min-height:100vh;
+  min-height:100vh; 
   max-height:max-content; 
   display: flex;
   flex-direction: column;
@@ -88,6 +90,7 @@ function CiteType({type,setType}) {
         <MenuItem value={'mla'}>MLA</MenuItem>
         <MenuItem value={'chicago'}>Chicago</MenuItem>
         <MenuItem value={'vancouver'}>Vancouver</MenuItem>
+        <MenuItem value={'manualfields'}>Extract Manual Fields</MenuItem>
       </Select>
     </FormControl>
   );
@@ -121,11 +124,86 @@ const Search = () => {
   const [user,setUser]=useState(null);
   const [department,setDeparment]=useState(null);
   const [type,setType]=useState(null);
-  const [cite,setCite]=useState(null);
+  const [cite,setCite]=useState('manualfields');
   const [keyword,setKeyboard]=useState('');
   const [start,setStart]=useState(null);
   const [end,setEnd]=useState(null);
-  const [result,setResult]=useState([]);
+  const [fieldList,setFieldList]=useState([]);
+  const [result,setResult]=useState([
+    {
+        "doi": "https://doi.org/10.1057/978024578369955_14",
+        "title": "a theory of learning, experimentation, and equilibrium in games",
+        "authors": [
+            {
+                "first": "Yash",
+                "middle": "",
+                "last": "Jaiswal",
+                "corresponding": true,
+                "_id": "65227d4266e363b6fd467308"
+            }
+        ]
+    },
+    {
+        "doi": "https://doi.org/10.1057/978ff0230369955_14",
+        "title": "a new heuristic for multilevel thresholding of images",
+        "authors": [
+            {
+                "first": "Vijay",
+                "middle": "Kumar",
+                "last": "Bohat",
+                "corresponding": true,
+                "_id": "65216b0b9b4caac364d4164b"
+            }
+        ]
+    },
+    {
+        "doi": "https://doi.org/10.1057/9780230369955",
+        "title": "innovation and intellectual property right",
+        "authors": [
+            {
+                "first": "Vijay",
+                "middle": "Kumar",
+                "last": "Bohat",
+                "corresponding": false,
+                "_id": "65216a6f9b4caac364d4162e"
+            },
+            {
+                "first": "Aniket ",
+                "middle": "",
+                "last": "Balodia",
+                "corresponding": true,
+                "_id": "65216a6f9b4caac364d4162f"
+            }
+        ]
+    },
+    {
+        "doi": "https://doi.org/10.1057/9780230369955_14",
+        "title": "innovation and intellectual property right intellect",
+        "authors": [
+            {
+                "first": "Ove",
+                "middle": "",
+                "last": "Grandstrand",
+                "corresponding": false,
+                "_id": "652168ee9b4caac364d415ff"
+            },
+            {
+                "first": "Vijay",
+                "middle": "Kumar",
+                "last": "Bohat",
+                "corresponding": true,
+                "_id": "652168ee9b4caac364d41600"
+            },
+            {
+                "first": "Yash",
+                "middle": "",
+                "last": "Jaiswal",
+                "corresponding": false,
+                "_id": "6521691f9b4caac364d41618"
+            }
+        ]
+    }
+]);
   const [error,setError]=useState('');
   const pdfRef = useRef(null);
 
@@ -134,6 +212,8 @@ const Search = () => {
     if(!cite) setError('Citation Style is required')
     if(!type) setError('Research Paper type is required')
     if(!cite || !type)  return;
+    var fields=fieldList.map(a=>a.value);
+    console.log(fields)
     var req={
       query:keyword,
       start:start?start:'1990-01-01',
@@ -141,11 +221,15 @@ const Search = () => {
     }
     if(user)  req={...req,uid:user._id};
     else req={...req,department:department};
+    if(fields.length)  req={...req,fields};
+    console.log(req)
     const res= await searchPaper(req,cite,type)
+    console.log(res)
     if(res.status===200){
       setResult(res.data)
     }
   }
+
   const savePDF=async()=>{
     // const doc = new jsPDF();
     // doc.setFontSize(12)
@@ -201,6 +285,25 @@ const Search = () => {
     }
   },[])
 
+  const row=[
+    {
+        "doi": "https://doi.org/10.1057/978024578369955_14",
+        "title": "a theory of learning, experimentation, and equilibrium in games"
+    },
+    {
+        "doi": "https://doi.org/10.1057/978ff0230369955_14",
+        "title": "a new heuristic for multilevel thresholding of images"
+    },
+    {
+        "doi": "https://doi.org/10.1057/9780230369955",
+        "title": "innovation and intellectual property right"
+    },
+    {
+        "doi": "https://doi.org/10.1057/9780230369955_14",
+        "title": "innovation and intellectual property right intellect"
+    }
+  ]
+const thead=["doi","title"];
   return (
     <Container>
       <Title>{user?user.name:department}</Title>
@@ -242,13 +345,19 @@ const Search = () => {
           <PaperType type={type} setType={setType} />
           <CiteType type={cite} setType={setCite} />
       </Input>
+      {
+        cite==='manualfields'?
+        <FieldSelector fieldList={fieldList} setFieldList={setFieldList} />
+        :''
+      }
+      
       <Input>
         <button onClick={search}>Search</button> 
         <Error>{error}</Error>
         <button onClick={savePDF}>Save as PDF</button>
       </Input>
-
-      {result.length&&type&&cite?
+      {cite==='manualfields'&& <Table theadData={thead} tbodyData={row} />}
+      {cite&&cite!=='manualfields'&&result.length&&type?
         <Papers id="pdfcontent" ref={pdfRef}>
           <h2>{user?user.name:department} - {type} {cite.toUpperCase()} style </h2>
           <h3>

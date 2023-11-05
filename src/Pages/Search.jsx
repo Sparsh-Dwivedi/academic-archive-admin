@@ -71,7 +71,7 @@ const Papers=styled.div`
     box-shadow: 0px 0px 15px -10px rgba(0, 0, 0, 0.75);
   }
 `
-function CiteType({type,setType}) {
+function CiteType({type,setType,setShowResult}) {
 
   return (
     <FormControl sx={{ m: 1, minWidth: 150 }} size="small">
@@ -81,7 +81,7 @@ function CiteType({type,setType}) {
         id="demo-select-small"
         value={type}
         label="Citation Type"
-        onChange={(e)=>setType(e.target.value)}
+        onChange={(e)=>{setType(e.target.value); setShowResult(false)}}
       >
         <MenuItem value={null}>
           <em>None</em>
@@ -95,8 +95,8 @@ function CiteType({type,setType}) {
     </FormControl>
   );
 }
-function PaperType({type,setType}) {
-
+function PaperType({type,setType,setShowResult}) {
+  
   return (
     <FormControl sx={{ m: 1, minWidth: 150 }} size="small">
       <InputLabel id="demo-select-small-label">Paper Type</InputLabel>
@@ -105,7 +105,7 @@ function PaperType({type,setType}) {
         id="demo-select-small"
         value={type}
         label="Paper Type"
-        onChange={(e)=>setType(e.target.value)}
+        onChange={(e)=>{setType(e.target.value); setShowResult(false)}}
       >
         <MenuItem value={null}>
           <em>None</em>
@@ -123,97 +123,26 @@ const Search = () => {
   const location = useLocation();
   const [user,setUser]=useState(null);
   const [department,setDeparment]=useState(null);
-  const [type,setType]=useState(null);
+  const [type,setType]=useState('book');
   const [cite,setCite]=useState('manualfields');
   const [keyword,setKeyboard]=useState('');
   const [start,setStart]=useState(null);
   const [end,setEnd]=useState(null);
   const [fieldList,setFieldList]=useState([]);
-  const [result,setResult]=useState([
-    {
-        "doi": "https://doi.org/10.1057/978024578369955_14",
-        "title": "a theory of learning, experimentation, and equilibrium in games",
-        "authors": [
-            {
-                "first": "Yash",
-                "middle": "",
-                "last": "Jaiswal",
-                "corresponding": true,
-                "_id": "65227d4266e363b6fd467308"
-            }
-        ]
-    },
-    {
-        "doi": "https://doi.org/10.1057/978ff0230369955_14",
-        "title": "a new heuristic for multilevel thresholding of images",
-        "authors": [
-            {
-                "first": "Vijay",
-                "middle": "Kumar",
-                "last": "Bohat",
-                "corresponding": true,
-                "_id": "65216b0b9b4caac364d4164b"
-            }
-        ]
-    },
-    {
-        "doi": "https://doi.org/10.1057/9780230369955",
-        "title": "innovation and intellectual property right",
-        "authors": [
-            {
-                "first": "Vijay",
-                "middle": "Kumar",
-                "last": "Bohat",
-                "corresponding": false,
-                "_id": "65216a6f9b4caac364d4162e"
-            },
-            {
-                "first": "Aniket ",
-                "middle": "",
-                "last": "Balodia",
-                "corresponding": true,
-                "_id": "65216a6f9b4caac364d4162f"
-            }
-        ]
-    },
-    {
-        "doi": "https://doi.org/10.1057/9780230369955_14",
-        "title": "innovation and intellectual property right intellect",
-        "authors": [
-            {
-                "first": "Ove",
-                "middle": "",
-                "last": "Grandstrand",
-                "corresponding": false,
-                "_id": "652168ee9b4caac364d415ff"
-            },
-            {
-                "first": "Vijay",
-                "middle": "Kumar",
-                "last": "Bohat",
-                "corresponding": true,
-                "_id": "652168ee9b4caac364d41600"
-            },
-            {
-                "first": "Yash",
-                "middle": "",
-                "last": "Jaiswal",
-                "corresponding": false,
-                "_id": "6521691f9b4caac364d41618"
-            }
-        ]
-    }
-]);
+  const [showResult,setShowResult]=useState(false);
+  const [result,setResult]=useState([]);
   const [error,setError]=useState('');
   const pdfRef = useRef(null);
-
+  
   const search=async()=>{
     setError(null)
+    setShowResult(false)
     if(!cite) setError('Citation Style is required')
     if(!type) setError('Research Paper type is required')
     if(!cite || !type)  return;
-    var fields=fieldList.map(a=>a.value);
-    console.log(fields)
+    if(fieldList.length)  var fields=fieldList.map(a=>a.value);
+    // console.log(fields)
+
     var req={
       query:keyword,
       start:start?start:'1990-01-01',
@@ -227,25 +156,11 @@ const Search = () => {
     console.log(res)
     if(res.status===200){
       setResult(res.data)
+      setShowResult(true)
     }
   }
 
   const savePDF=async()=>{
-    // const doc = new jsPDF();
-    // doc.setFontSize(12)
-    // doc.text( result,20, 25,);
-    // doc.save("research paper citation");
-    // const content = pdfRef.current;
-    // console.log(content)
-    // const doc = new jsPDF();
-    // doc.setFontSize("1");
-    // doc.html(content, {
-    //     callback: function (doc) {
-    //         doc.save('sample.pdf');
-    //     },
-    //     width: 200, // <- here
-    //     windowWidth: 200 // <- here
-    // });
     var doc = new jsPDF("p", "pt", "letter"),
             source = document.getElementById("pdfcontent"),
             margins = {
@@ -285,25 +200,6 @@ const Search = () => {
     }
   },[])
 
-  const row=[
-    {
-        "doi": "https://doi.org/10.1057/978024578369955_14",
-        "title": "a theory of learning, experimentation, and equilibrium in games"
-    },
-    {
-        "doi": "https://doi.org/10.1057/978ff0230369955_14",
-        "title": "a new heuristic for multilevel thresholding of images"
-    },
-    {
-        "doi": "https://doi.org/10.1057/9780230369955",
-        "title": "innovation and intellectual property right"
-    },
-    {
-        "doi": "https://doi.org/10.1057/9780230369955_14",
-        "title": "innovation and intellectual property right intellect"
-    }
-  ]
-const thead=["doi","title"];
   return (
     <Container>
       <Title>{user?user.name:department}</Title>
@@ -342,22 +238,24 @@ const thead=["doi","title"];
         </Year>
       </Input>
       <Input>
-          <PaperType type={type} setType={setType} />
-          <CiteType type={cite} setType={setCite} />
+          <PaperType type={type} setShowResult={setShowResult} setType={setType} />
+          <CiteType type={cite} setType={setCite} setShowResult={setShowResult}/>
       </Input>
       {
-        cite==='manualfields'?
-        <FieldSelector fieldList={fieldList} setFieldList={setFieldList} />
+        cite==='manualfields'&&type?
+        <FieldSelector setShowResult={setShowResult} type={type} fieldList={fieldList} setFieldList={setFieldList} />
         :''
       }
       
       <Input>
         <button onClick={search}>Search</button> 
         <Error>{error}</Error>
-        <button onClick={savePDF}>Save as PDF</button>
+        {cite!=='manualfields' && <button onClick={savePDF}>Save as PDF</button>}
       </Input>
-      {cite==='manualfields'&& <Table theadData={thead} tbodyData={row} />}
-      {cite&&cite!=='manualfields'&&result.length&&type?
+
+      {cite==='manualfields' && type && showResult && <Table theadData={fieldList} tbodyData={result} />}
+
+      {cite&&cite!=='manualfields'&&showResult&&result.length&&type?
         <Papers id="pdfcontent" ref={pdfRef}>
           <h2>{user?user.name:department} - {type} {cite.toUpperCase()} style </h2>
           <h3>

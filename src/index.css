@@ -9,3 +9,34 @@
 body{
   margin:0;
 }
+.excel-button{
+  width: max-content;
+  margin: 1rem 0;
+  padding: 0.5rem 0.8rem;
+  font-size: 1rem;
+  font-weight: 600;
+  background: #259356;
+  color: white;
+  border: none;
+  border-radius:1rem;
+  cursor:pointer;
+}
+
+.table{
+  font-size:1rem;
+  border:2px solid black;
+  border-collapse: collapse;
+  overflow:hidden;
+  max-width:100%;
+  margin-bottom:2rem;
+  >th,td{
+    border:1px solid black;
+    overflow:auto;
+    max-width:20%;
+    padding:0.5rem;
+  }
+  >thead{
+    background-color:black;
+    color:white;
+  }
+}

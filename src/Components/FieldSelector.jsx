@@ -48,7 +48,7 @@ const AddField=({list,setFieldList,fieldList,setShowResult})=> {
           // onChange={(e)=>setType(null)}
         >
           {list.map((l,index)=>(
-            <MenuItem value={l.value} onClick={()=>handleClick(l)}>{l.label}</MenuItem>
+            <MenuItem key={index} value={l.value} onClick={()=>handleClick(l)}>{l.label}</MenuItem>
           ))}
         </Select>
       </FormControl>
@@ -69,7 +69,7 @@ const FieldsSelector = ({fieldList,setFieldList,type,setShowResult}) => {
         <AddField setShowResult={setShowResult} list={getFieldList(type)} fieldList={fieldList} setFieldList={setFieldList}/>
         {
           fieldList.map((f,idx)=>(
-            <span>{f.label}
+            <span key={idx}>{f.label}
             <CloseIcon onClick={()=>handleRemove(idx)}/>
             </span>
           ))

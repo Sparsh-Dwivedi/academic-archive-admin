@@ -1,4 +1,5 @@
 import axios from "axios";
+import { loginSuccess } from "../Redux/userRedux";
 
 const BASE_URL=import.meta.env.VITE_BASE_URL;
 console.log(BASE_URL)
@@ -18,9 +19,14 @@ export const getAllUsers= async ()=>{
     }
 }
 
-export const searchPaper= async (req,cite,type)=>{
+export const searchPaper= async (req,cite,type,token)=>{
+    const config={
+        headers:{
+            'token': `Bearer ${token}`
+        }
+    }
     try{
-        const res=await publicRequest.post('/papers/search/'+type+'/'+cite,req)
+        const res=await publicRequest.post('/papers/search/'+type+'/'+cite,req,config)
         console.log(res)
         return res;
     }
@@ -30,3 +36,15 @@ export const searchPaper= async (req,cite,type)=>{
     }
 }
 
+export const login= async (dispatch,user)=>{
+    try{
+        const res=await publicRequest.post('/auth/login',user)
+        const {accessToken,...userDetails}=res.data;
+        dispatch(loginSuccess({accessToken,userDetails}));
+        return res;
+    }
+    catch(err){
+        console.log(err)
+        return err;
+    }
+}

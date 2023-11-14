@@ -2,15 +2,14 @@ import React from 'react'
 import styled from 'styled-components'
 import Navbar from './Components/Navbar'
 import Home from './Pages/Home';
-import {
-  createBrowserRouter,
-  RouterProvider,
-} from "react-router-dom";
+import {createBrowserRouter,RouterProvider} from "react-router-dom";
 import Faculty from './Pages/Faculty';
 import Department from './Pages/Department';
 import Search from './Pages/Search';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import Login from './Pages/Login';
+import Options from './Pages/Options';
 
 const Container=styled.div`
     background-color: rgb(238, 238, 238);
@@ -23,6 +22,14 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: <Home/>,
+  },
+  {
+    path: "/domain",
+    element: <Options/>,
+  },
+  {
+    path: "/login",
+    element: <Login/>,
   },
   {
     path: "/faculty",
@@ -49,4 +56,4 @@ const App = () => {
   )
 }
 
-export default App
+export default App;

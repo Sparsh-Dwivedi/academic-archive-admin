@@ -11,6 +11,8 @@ import Select from '@mui/material/Select';
 import { searchPaper } from '../utils/api';
 import FieldSelector from '../Components/FieldSelector';
 import Table from '../Components/Table';
+import { useDispatch, useSelector } from 'react-redux'
+
 
 const Container=styled.div`
   width:100%;
@@ -123,8 +125,8 @@ const Search = () => {
   const location = useLocation();
   const [user,setUser]=useState(null);
   const [department,setDeparment]=useState(null);
-  const [type,setType]=useState('book');
-  const [cite,setCite]=useState('manualfields');
+  const [type,setType]=useState(null);
+  const [cite,setCite]=useState(null);
   const [keyword,setKeyboard]=useState('');
   const [start,setStart]=useState(null);
   const [end,setEnd]=useState(null);
@@ -132,6 +134,7 @@ const Search = () => {
   const [showResult,setShowResult]=useState(false);
   const [result,setResult]=useState([]);
   const [error,setError]=useState('');
+  const {token}=useSelector(state=>state.user)
   const pdfRef = useRef(null);
   
   const search=async()=>{
@@ -150,9 +153,10 @@ const Search = () => {
     }
     if(user)  req={...req,uid:user._id};
     else req={...req,department:department};
-    if(fields.length)  req={...req,fields};
+    if(fields && fields.length)  req={...req,fields};
     console.log(req)
-    const res= await searchPaper(req,cite,type)
+    console.log(token)
+    const res= await searchPaper(req,cite,type,token)
     console.log(res)
     if(res.status===200){
       setResult(res.data)

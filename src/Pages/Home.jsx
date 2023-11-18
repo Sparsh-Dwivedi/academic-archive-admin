@@ -39,9 +39,9 @@ const Item=styled.div`
 `
 
 const list=[
-  {  name:'Research Papers',link:'/domain'},
-  {  name:'M.Tech Projects',},
-  {  name:'B.Tech Projects',},
+  {  name:'Research Papers',},
+  {  name:'M.Tech Projects',record:true},
+  {  name:'B.Tech Projects',record:true},
   {  name:'Phd Scholars',},
   {  name:'Faculty Development Program',},
   {  name:'Short Term Courses',},
@@ -57,10 +57,11 @@ const Home = () => {
   useEffect(()=>{
     if(user.currentUser==null)  navigate('/login')
   })
+
   return (
     <Wrapper>
-      {list.map(ele=>(
-        <Item onClick={()=>navigate(ele.link)}>
+       {list.map(ele=>(
+        <Item onClick={()=>navigate('/domain',{state:{record:ele.name}})}>
             <img src={department}/>
             <span>{ele.name}</span>
         </Item>

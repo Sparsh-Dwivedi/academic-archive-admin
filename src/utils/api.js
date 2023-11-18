@@ -19,6 +19,23 @@ export const getAllUsers= async ()=>{
     }
 }
 
+export const searchRecord= async (req,type,token)=>{
+    const config={
+        headers:{
+            'token': `Bearer ${token}`
+        }
+    }
+    try{
+        const res=await publicRequest.post('/record/search/'+type+'/',req,config)
+        console.log(res)
+        return res;
+    }
+    catch(err){
+        console.log(err)
+        return err;
+    }
+}
+
 export const searchPaper= async (req,cite,type,token)=>{
     const config={
         headers:{
@@ -39,7 +56,10 @@ export const searchPaper= async (req,cite,type,token)=>{
 export const login= async (dispatch,user)=>{
     try{
         const res=await publicRequest.post('/auth/login',user)
-        const {accessToken,...userDetails}=res.data;
+        if(res.data.isAdmin===false)    return {
+            response:{status:401,data:'You are not an Admin, only admin can login.'}
+        }
+        const {accessToken,...userDetails}=res.data;    
         dispatch(loginSuccess({accessToken,userDetails}));
         return res;
     }

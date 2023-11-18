@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import {useNavigate} from 'react-router-dom'
+import {useLocation, useNavigate} from 'react-router-dom'
 
 const Container=styled.div` 
   width:200px;
@@ -28,12 +28,21 @@ const Container=styled.div`
 `
 const UserCard = ({user}) => {
   const navigate=useNavigate();
+  const location=useLocation();
+
+  const handleClick=()=>{
+    if(location.state.record)  navigate('/recordsearch',{state:{user,record:location.state.record}}) 
+    else navigate('/search',{state:{user}})
+  }
   return (
-    <Container onClick={()=>navigate('/search',{state:{user}})}>
+    <>
+    {user.isAdmin?'':
+    <Container onClick={handleClick}>
       <img src={user.avatar}/>
       {user.name}
       <span>{user.department}</span>
-    </Container>
+    </Container>}
+    </>
   )
 }
 

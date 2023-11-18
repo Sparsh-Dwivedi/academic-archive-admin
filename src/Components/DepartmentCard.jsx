@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
-import {useNavigate} from 'react-router-dom'
-import department from '../Assests/department.png'
+import {useLocation, useNavigate} from 'react-router-dom'
+import departmentImg from '../Assests/department.png'
 
 const Container=styled.div` 
   width:200px;
@@ -24,15 +24,23 @@ const Container=styled.div`
     border-radius:50%;
   }
   span{
-    font-size:1rem;
+    font-size:1.2rem;
+    text-align:center;
   }
 `
-const DepartmentCard = ({user}) => {
+const DepartmentCard = ({departmentName}) => {
   const navigate=useNavigate();
+  const location=useLocation();
+
+  const handleClick=()=>{
+    if(location.state.record)  
+      navigate('/recordsearch',{state:{department:departmentName,record:location.state.record}}) 
+    else navigate('/search',{state:{department:departmentName}})
+  }
   return (
-    <Container onClick={()=>navigate('/search',{state:{department:'Computer Science'}})}>
-      <img src={department}/>
-      {'Computer Science'}
+    <Container onClick={handleClick}>
+      <img src={departmentImg}/>
+      <span>{departmentName}</span>
     </Container>
   )
 }

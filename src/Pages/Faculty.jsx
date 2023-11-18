@@ -2,6 +2,9 @@ import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import UserCard from '../Components/UserCard';
 import { getAllUsers } from '../utils/api';
+import Loader from '../Components/Loader';
+import ReportProblemIcon from '@mui/icons-material/ReportProblem';
+import { useLocation } from 'react-router-dom';
 
 const Container=styled.div`
   width:100%;
@@ -10,59 +13,47 @@ const Container=styled.div`
   display: flex;
 
 `
-
+const Error=styled.div`
+  width:100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  font-weight: 600;
+  color: red;
+  svg{
+    font-size:2rem;
+    margin-right:0.5rem;
+  }
+`
 const Faculty = () => {
   const [users,setUsers]=useState([]);
-//   const users=[
-//     {
-//         "_id": "64fd711a0604578415de9b4d",
-//         "username": "yashjaiswal",
-//         "email": "yash@gmail.com",
-//         "name": "Yash Jaiswal",
-//         "department":"Computer Science",
-//         "address": "INDIA",
-//         "ph": 8130060493,
-//         "password": "U2FsdGVkX18MdqxsonEtBAXWeSHEo0jrSJM0NYVgchw=",
-//         "avatar": "https://www.pngarts.com/files/10/Default-Profile-Picture-PNG-Free-Download.png",
-//         "isAdmin": false,
-//         "createdAt": "2023-09-10T07:32:42.422Z",
-//         "updatedAt": "2023-09-20T07:56:00.810Z",
-//         "__v": 0,
-//         "qualification": "Doctorate in engineering"
-//     },
-//     {
-//         "_id": "64fd711a0604578415de9b4d",
-//         "username": "yashjaiswal",
-//         "email": "yash@gmail.com",
-//         "name": "Yash Jaiswal",
-//         "address": "INDIA",
-//         "ph": 8130060493,
-//         "password": "U2FsdGVkX18MdqxsonEtBAXWeSHEo0jrSJM0NYVgchw=",
-//         "avatar": "https://www.pngarts.com/files/10/Default-Profile-Picture-PNG-Free-Download.png",
-//         "isAdmin": false,
-//         "createdAt": "2023-09-10T07:32:42.422Z",
-//         "updatedAt": "2023-09-20T07:56:00.810Z",
-//         "__v": 0,
-//         "qualification": "Doctorate in engineering"
-//     }
-// ];
+  const [loading,setLoading]=useState(false);
+  const [error,setError]=useState(false);
 
   const getUsers=async()=>{
+    setLoading(true);
     const res=await getAllUsers();
     console.log(res)
     if(res.status===200){
       setUsers(res.data);
     }
+    else setError(true);
+    setLoading(false);
   }
   useEffect(()=>{
     getUsers();
   },[])
   return (
+    <>
     <Container>
-      {users.map(e=>(
-        <UserCard user={e}/>
-      ))}
+      {error&&<Error><ReportProblemIcon/>Something Went Wrong...</Error>}
+      {loading?<Loader/>:
+      users.map(e=>(
+        <UserCard user={e} />
+        ))}
     </Container>
+    </>
   )
 }
 

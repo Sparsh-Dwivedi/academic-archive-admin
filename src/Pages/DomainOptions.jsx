@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import styled from 'styled-components'
 import department from '../Assests/department.png'
 import faculty from '../Assests/faculty.png'
-import {useNavigate}  from 'react-router-dom'
+import {useLocation, useNavigate}  from 'react-router-dom'
 import { useSelector } from 'react-redux'
 
 const Wrapper=styled.div`
@@ -30,19 +30,21 @@ const Item=styled.div`
     height:80%;
   }
 `
-const Options = () => {
+const DomainOptions = () => {
   const user=useSelector(state=>state.user);
+  const location=useLocation();
   const navigate=useNavigate();
   useEffect(()=>{
+    console.log(location)
     if(user.currentUser==null)  navigate('/login')
   })
   return (
     <Wrapper>
-        <Item onClick={()=>navigate('/department')}>
+        <Item onClick={()=>navigate('/department',{state:{record:location.state.record}})}>
             <img src={department}/>
             Department
         </Item>
-        <Item onClick={()=>navigate('/faculty')}>
+        <Item onClick={()=>navigate('/faculty',{state:{record:location.state.record}})}>
             <img src={faculty}/>
             Faculty
         </Item>
@@ -50,4 +52,4 @@ const Options = () => {
   )
 }
 
-export default Options
+export default DomainOptions

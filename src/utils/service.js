@@ -42,6 +42,14 @@ const bookFieldList=[
     {value:'doi',label:'DOI'},
 ]
 
+export const departmentNames = [
+    'Computer Science',
+    'Information Technology',
+    'Electronics',
+    'Electrical',
+    'Mechanical',
+  ];
+
 export const getFieldList=(type)=>{
     var retVal=[]
     if(type==='chapter')    retVal= chapterFieldList;
@@ -53,13 +61,56 @@ export const getFieldList=(type)=>{
 }
 
 export const parseField=(row,key)=>{
-    if(key=='authors' || key==='editors'){
+    console.log(key)
+    console.log(row[key])
+    if(key=='authors' || key==='editors' || key==='students'){
         var str='';
         row[key].forEach(ele => {
-            str+=(ele.first?ele.first:'')+' '+(ele.middle?ele.middle:'')+' '+(ele.last?ele.last:'')+', ';
-
+            str+=(ele.first?ele.first:'')+' '+(ele.middle?ele.middle+' ':'')+(ele.last?ele.last:'')+', ';
         });
         return str.slice(0,-2);
     }
+    else if(key==='student')    
+        return (row[key].first?row[key].first:'')+' '+(row[key].middle?row[key].middle+' ':'')+(row[key].last?row[key].last:'')
     else return row[key][0].toUpperCase()+row[key].slice(1);
+}
+
+export const getRecordType=(recordName)=>{
+    switch(recordName) {
+        case 'M.Tech Projects':
+            return 'mtp';
+          break;
+        
+        case 'B.Tech Projects':
+            return 'btp';
+          break;
+        
+        default:
+          
+      }
+}
+
+export const getRecordFields=(recordName)=>{
+    console.log(recordName)
+    switch(recordName) {
+        case 'mtp':
+            return [
+                {label:'Title',value:'title'},
+                {label:'Student Name',value:'student'},
+                {label:'Project Year',value:'year'},
+            ];
+          break;
+        
+        case 'btp':
+            return [
+                {label:'Title',value:'title'},
+                {label:'Student Names',value:'students'},
+                {label:'Project Year',value:'year'},
+                {label:'Project Type',value:'type'},
+            ];
+          break;
+        
+        default:
+          
+      }
 }

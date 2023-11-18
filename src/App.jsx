@@ -9,7 +9,8 @@ import Search from './Pages/Search';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import Login from './Pages/Login';
-import Options from './Pages/Options';
+import DomainOptions from './Pages/DomainOptions';
+import RecordSearch from './Pages/RecordSearch';
 
 const Container=styled.div`
     background-color: rgb(238, 238, 238);
@@ -25,7 +26,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/domain",
-    element: <Options/>,
+    element: <DomainOptions/>,
   },
   {
     path: "/login",
@@ -42,6 +43,10 @@ const router = createBrowserRouter([
   {
     path: "/search",
     element: <Search/>,
+  },
+  {
+    path: "/recordsearch",
+    element: <RecordSearch/>,
   },
 ]);
 

@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react'
 import styled from 'styled-components'
 import department from '../Assests/department.png'
-import faculty from '../Assests/faculty.png'
 import {useNavigate}  from 'react-router-dom'
 import { useSelector } from 'react-redux'
 
@@ -61,12 +60,12 @@ const Home = () => {
   return (
     <Wrapper>
        {list.map(ele=>(
-        <Item onClick={()=>navigate('/domain',{state:{record:ele.name}})}>
+        <Item onClick={()=>navigate('/domain',{state:{record:(ele.record?ele.name:null)}})}>
             <img src={department}/>
             <span>{ele.name}</span>
         </Item>
         ))}
-               
+
     </Wrapper>
   )
 }

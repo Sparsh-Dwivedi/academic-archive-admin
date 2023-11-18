@@ -107,10 +107,10 @@ const RecordSearch = () => {
     if(type=='mtp' || type=='btp'){
       var req={
         start:start?start:'1990-01-01',
-        end:end?end:moment(dayjs.$d).format('YYYY-MM-DD')
+        end:end?end:moment(dayjs.$d).format('YYYY')
       }
       if(user)  req={...req,uid:user._id};
-      // else req={...req,department:department};
+      else req={...req,department:department};
       console.log(req)
       const res= await searchRecord(req,type,token)
       console.log(res)

@@ -91,10 +91,10 @@ export const getRecordType=(recordName)=>{
 }
 
 export const getRecordFields=(recordName)=>{
-    console.log(recordName)
     switch(recordName) {
         case 'mtp':
             return [
+                {label:'Faculty Name',value:'name'},
                 {label:'Title',value:'title'},
                 {label:'Student Name',value:'student'},
                 {label:'Project Year',value:'year'},
@@ -103,6 +103,7 @@ export const getRecordFields=(recordName)=>{
         
         case 'btp':
             return [
+                {label:'Faculty Name',value:'name'},
                 {label:'Title',value:'title'},
                 {label:'Student Names',value:'students'},
                 {label:'Project Year',value:'year'},

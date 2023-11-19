@@ -13,7 +13,7 @@ import FieldSelector from '../Components/FieldSelector';
 import Table from '../Components/Table';
 import { useDispatch, useSelector } from 'react-redux'
 import { getRecordFields, getRecordType } from '../utils/service';
-
+import Loader from '../Components/Loader'
 
 const Container=styled.div`
   width:100%;
@@ -44,6 +44,7 @@ const Input=styled.div`
     color:white;
     border:none;
     border-radius:15px;
+    margin-top:1rem;
   }
 `
 const Keyword=styled.input`
@@ -95,6 +96,7 @@ const RecordSearch = () => {
   const [type,setType]=useState(null);
   const [start,setStart]=useState(null);
   const [end,setEnd]=useState(null);
+  const [loading,setLoading]=useState(false);
   const [showResult,setShowResult]=useState(false);
   const [result,setResult]=useState([]);
   const [error,setError]=useState('');
@@ -103,8 +105,8 @@ const RecordSearch = () => {
   const search=async()=>{
     setError(null)
     setShowResult(false)
-    
-    if(type=='mtp' || type=='btp'){
+    setLoading(true)
+    // if(type=='mtp' || type=='btp'){
       var req={
         start:start?start:'1990-01-01',
         end:end?end:moment(dayjs.$d).format('YYYY')
@@ -119,7 +121,8 @@ const RecordSearch = () => {
         setShowResult(true) 
       }
       else setError('Something went wrong,Unable to fetch data....')
-    }
+    // }
+    setLoading(false)
 
   }
 
@@ -137,7 +140,7 @@ const RecordSearch = () => {
   return (
     <Container>
       <Title>{user?user.name:department} - {location.state.record}</Title>
-      <Input>
+      {(type=='mtp' || type=='btp') && <Input>
         <Year>
           <DatePicker  label="Start Year" 
             views={['year']}
@@ -170,7 +173,7 @@ const RecordSearch = () => {
             format="YYYY"
           />
         </Year>
-      </Input>
+      </Input>}
      
       
       <Input>
@@ -178,8 +181,9 @@ const RecordSearch = () => {
         <Error>{error}</Error>
       </Input>
 
-      {type && showResult && <Table theadData={getRecordFields(type)} tbodyData={result} />}
-
+      {type && showResult && <Table department={department} theadData={getRecordFields(type)} tbodyData={result} />}
+      
+      {loading && <Loader/>}
      
     </Container>
   )

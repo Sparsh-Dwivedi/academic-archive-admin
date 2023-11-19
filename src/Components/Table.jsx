@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import ReactHTMLTableToExcel from 'react-html-table-to-excel';
 import { parseField } from '../utils/service';
 
-const Table = ({theadData,tbodyData}) => {
+const Table = ({theadData,tbodyData,department}) => {
     console.log('table head')
     console.log(theadData)
     console.log('table body')
@@ -12,7 +12,7 @@ const Table = ({theadData,tbodyData}) => {
             console.log('new')
             // console.log(row['doi'])
             theadData.map(key=>{
-                console.log(parseField(row,key.value))
+                // console.log(parseField(row,key.value))
             })
         })
     })
@@ -30,7 +30,10 @@ const Table = ({theadData,tbodyData}) => {
         <thead className='tablehead'>
         <tr>
             {theadData.map(heading => {
-                return <th key={heading.label}>{heading.label.toUpperCase()}</th>
+                if(heading.label!=='Faculty Name' || (heading.label==='Faculty Name'&&department)){
+                    return <th key={heading.label}>{heading.label.toUpperCase()}</th>
+                }
+                else return '';
             })}
         </tr>
         </thead>
@@ -38,7 +41,9 @@ const Table = ({theadData,tbodyData}) => {
             {tbodyData.map((row, index) => {
                 return <tr key={index}>
                     {theadData.map((key, index) => {
-                        return <td key={row[key.value]}>{parseField(row,key.value)}</td>
+                        if(key.label!=='Faculty Name' || (key.label==='Faculty Name'&&department))
+                            return <td key={row[key.value]}>{parseField(row,key.value)}</td>
+                        else return '';
                     })}
             </tr>;
             })}

@@ -41,14 +41,14 @@ const list=[
   {  name:'Research Papers',},
   {  name:'M.Tech Projects',record:true},
   {  name:'B.Tech Projects',record:true},
-  {  name:'Phd Scholars',},
-  {  name:'Faculty Development Program',},
-  {  name:'Short Term Courses',},
-  {  name:'Patents',},
-  {  name:'Project Grants',},
-  {  name:'Project Consultancy',},
-  {  name:'Invited Talks',},
-  {  name:'Society Membership',},
+  {  name:'Phd Scholars',record:true},
+  {  name:'Faculty Development Program',record:true},
+  {  name:'Short Term Courses',record:true},
+  {  name:'Patents',record:true},
+  {  name:'Project Grants',record:true},
+  {  name:'Project Consultancy',record:true},
+  {  name:'Invited Talks',record:true},
+  {  name:'Society Membership',record:true},
 ]
 const Home = () => {
   const user=useSelector(state=>state.user);

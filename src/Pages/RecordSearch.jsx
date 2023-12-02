@@ -64,30 +64,7 @@ const Error=styled.span`
   font-weight: 600;
 `
 
-function CiteType({type,setType,setShowResult}) {
 
-  return (
-    <FormControl sx={{ m: 1, minWidth: 150 }} size="small">
-      <InputLabel id="demo-select-small-label">Citation Type</InputLabel>
-      <Select
-        labelId="demo-select-small-label"
-        id="demo-select-small"
-        value={type}
-        label="Citation Type"
-        onChange={(e)=>{setType(e.target.value); setShowResult(false)}}
-      >
-        <MenuItem value={null}>
-          <em>None</em>
-        </MenuItem>
-        <MenuItem value={'apa'}>APA</MenuItem>
-        <MenuItem value={'mla'}>MLA</MenuItem>
-        <MenuItem value={'chicago'}>Chicago</MenuItem>
-        <MenuItem value={'vancouver'}>Vancouver</MenuItem>
-        <MenuItem value={'manualfields'}>Extract Manual Fields</MenuItem>
-      </Select>
-    </FormControl>
-  );
-}
 
 const RecordSearch = () => {
   const location = useLocation();

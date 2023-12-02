@@ -44,7 +44,7 @@ const AddField=({list,setFieldList,fieldList,setShowResult})=> {
           labelId="demo-select-small-label"
           id="demo-select-small"
           value={''}
-          label="Paper Type"
+          label="Fields"
           // onChange={(e)=>setType(null)}
         >
           {list.map((l,index)=>(

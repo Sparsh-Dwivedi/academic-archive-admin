@@ -12,7 +12,7 @@ import { searchPaper } from '../utils/api';
 import FieldSelector from '../Components/FieldSelector';
 import Table from '../Components/Table';
 import { useDispatch, useSelector } from 'react-redux'
-
+import Loader from '../Components/Loader'
 
 const Container=styled.div`
   width:100%;
@@ -64,9 +64,13 @@ const Error=styled.span`
 const Papers=styled.div`
   display: flex;
   flex-direction: column;
+  font-weight:700;
+  font-size:1.2rem;
   span{
     background-color: white;
     padding: 0.5rem;
+    font-weight:400;
+    font-size:1rem;
     border-radius: 10px;
     margin: 0.5rem;
     -webkit-box-shadow: 0px 0px 10px -10px rgba(0, 0, 0, 0.75);
@@ -132,13 +136,29 @@ const Search = () => {
   const [end,setEnd]=useState(null);
   const [fieldList,setFieldList]=useState([]);
   const [showResult,setShowResult]=useState(false);
-  const [result,setResult]=useState([]);
+  const [result,setResult]=useState({
+    "2004": [
+        "Bohat ,V. , &Arya ,K. (2004). A new heuristic for multilevel thresholding of images (3). Oxford University Press. https://doi.org/10.1057/9780230369955_14"
+    ],
+    "2005": [
+        "Bohat ,V. , &Jaiswal ,Y. (2005). Innovation and intellectual property right (3). Elsevier. https://doi.org/10.1057/97802303",
+        "Bohat ,V. (2005). An for real-parameter optimization and its application in training of feedforward neural networks (4). Elsevier. https://doi.org/10.1057/98780230369955_14"
+    ],
+    "2006": [
+        "Jaiswal ,Y. , &Gupta ,J. (2006). The theory of implementation in nash equilibrium: a survey (4). Social Goals and Social Organization. https://doi.org/10.1057/975646769955_14"
+    ],
+    "2018": [
+        "Dwivedi ,S. (2018). Responsible ai (III). Scholastic. http://dx.doi.org/10.1093/ajae/aaq021"
+    ]
+});
   const [error,setError]=useState('');
+  const [loading,setLoading]=useState(false);
   const {token}=useSelector(state=>state.user)
   const pdfRef = useRef(null);
   
   const search=async()=>{
     setError(null)
+    setLoading(true)
     setShowResult(false)
     if(!cite) setError('Citation Style is required')
     if(!type) setError('Research Paper type is required')
@@ -154,14 +174,16 @@ const Search = () => {
     if(user)  req={...req,uid:user._id};
     else req={...req,department:department};
     if(fields && fields.length)  req={...req,fields};
-    console.log(req)
-    console.log(token)
+    // console.log(req)
+    // console.log(token)
     const res= await searchPaper(req,cite,type,token)
     console.log(res)
     if(res.status===200){
       setResult(res.data)
       setShowResult(true)
     }
+    else setError('Some Internal Error Occur')
+    setLoading(false)
   }
 
   const savePDF=async()=>{
@@ -202,7 +224,13 @@ const Search = () => {
     else if(location.state && location.state.department){
       setDeparment(location.state.department)
     }
+
   },[])
+
+  useEffect(()=>{
+    setFieldList([])
+    setShowResult(false)
+  },[type,start,end])
 
   return (
     <Container>
@@ -241,6 +269,7 @@ const Search = () => {
           />
         </Year>
       </Input>
+      
       <Input>
           <PaperType type={type} setShowResult={setShowResult} setType={setType} />
           <CiteType type={cite} setType={setCite} setShowResult={setShowResult}/>
@@ -259,7 +288,8 @@ const Search = () => {
 
       {cite==='manualfields' && type && showResult && <Table theadData={fieldList} tbodyData={result} />}
 
-      {cite&&cite!=='manualfields'&&showResult&&result.length&&type?
+      {loading&&<Loader/>}
+      {cite&&cite!=='manualfields'&&showResult&&result!={}&&type?
         <Papers id="pdfcontent" ref={pdfRef}>
           <h2>{user?user.name:department} - {type} {cite.toUpperCase()} style </h2>
           <h3>
@@ -267,9 +297,16 @@ const Search = () => {
             {start===null&&end?("Before "+`${end}`):''}
             {end===null&&start?("After "+`${start}`):''}
           </h3>
-          {result.map((r,index)=>
-            <span>{index+1+") "+r}</span>  
-          )}
+          
+          {Object.keys(result).map(key=>{
+            return    <>
+              {key}
+              {result[key].map((r,index)=>(
+                <span>{`${index+1}) ${r}`}</span>
+              ))}
+              </>
+          })
+          }
         </Papers>
       :''}
     </Container>

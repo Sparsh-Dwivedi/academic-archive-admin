@@ -31,6 +31,12 @@ const Wrapper=styled.div`
 
 const AddField=({list,setFieldList,fieldList,setShowResult})=> {
   const handleClick=(l)=>{
+    console.log(l)
+    if(l.value==='all'){
+      setFieldList(list.slice(1))
+      setShowResult(false)
+      return ;
+    }
     const idx=fieldList.indexOf(l);
     if(idx===-1){
       setFieldList(prev=>[...prev,l])

@@ -278,7 +278,7 @@ const Search = () => {
         cite==='manualfields'&&type?
         <FieldSelector setShowResult={setShowResult} type={type} fieldList={fieldList} setFieldList={setFieldList} />
         :''
-      }
+      } 
       
       <Input>
         <button onClick={search}>Search</button> 

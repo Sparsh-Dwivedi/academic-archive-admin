@@ -10,10 +10,11 @@ const chapterFieldList=[
     {value:'doi',label:'DOI'},
 ]
 const conferenceFieldList=[
+    {value:'all',label:'All Fields'},
     {value:'title',label:'Title'},
     {value:'authors',label:'Authors'},
     {value:'conferenceTitle',label:'Conference Title'},
-    {value:'bookTitle',label:'Book Title'},
+    // {value:'bookTitle',label:'Book Title'},
     {value:'publishedOn',label:'Date of Publication'},
     {value:'publisher',label:'Publisher'},
     {value:'conferenceDate',label:'Date of Conference'},
